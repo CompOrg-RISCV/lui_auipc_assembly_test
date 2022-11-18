@@ -24,8 +24,8 @@ _start:
 	addi x12, x0, 0xa5
 	slli x12, x12, 8
 	ori x12, x12, 0xa5
-	slli x12, x12, 8            // x10 = -1 (0xffffffff)
-	ori x12, x12, 0xa0          // x11 = 1 (0x00000001)
+	slli x12, x12, 8         // x10 = -1 (0xffffffff)
+	ori x12, x12, 0xa0       // x11 = 1 (0x00000001)
 	slli x12, x12, 8		                // set x12 to 0xa5a5a000
 	slli x13, x10, 12		                // set x13 to 0xfffff000
 
@@ -33,10 +33,10 @@ _start:
 	addi x5, x0, -1			                // set x5 to all 1s.  Required to verify that lui 0s out the lower 12-bits
 	lui x5, 0xa5a5a
 	bne x5, x12, FAIL		                // branch to fail if not properly load the upper 20 bits and 0s out the lower 12
-	nop                         // x12 = 0xa5a5a000
-	nop                         // x13 = 0xfffff000
-	nop                         // x5 = 0xffffffff
-	nop                         // not branch if x5 = x12
+	nop                      // x12 = 0xa5a5a000
+	nop                      // x13 = 0xfffff000
+	nop                      // x5 = 0xffffffff
+	nop                      // not branch if x5 = x12 // validates upper 20-bit upper immediate loaded correctly and lower 12-bits set to 0
 	nop
 
 /***************************************************************
@@ -50,19 +50,19 @@ _start:
 PC_LOC:
 	auipc x5, 0xa5a5a		                // auipc pc = PC_LOC label value
 	sub x7, x5, x9			                // auipc - pc should be upper immediate value only
- 	bne x7, x8, FAIL            // x8 = 0xa5a5a000   // validate upper 20-bit addition
- 	nop                         // x9 = PC_LOC :: 0x000
- 	nop                         // x9 = PC_LOC
- 	nop                         // x5 = 0xa5a5a000 + PC_LOC
- 	nop                         // Branched to fail if x7 != 0xa5a5a000   
+ 	bne x7, x8, FAIL         // x8 = 0xa5a5a000   // validate upper 20-bit addition (lui)
+ 	nop                      // x9 = PC_LOC :: 0x000
+ 	nop                      // x9 = PC_LOC
+ 	nop                      // x5 = 0xa5a5a000 + PC_LOC (auipc)
+ 	nop                      // Branched to fail if x7 != 0xa5a5a000 // validates auipc added upper immediate
  // auipc (add upper immediate to pc) test 2:  test PC address added
 	sub x7, x5, x8			                // subtract upper immediate from auipc
-	bne x7, x9, FAIL		                // auipc - upper immediate does not equal pc
+	bne x7, x9, FAIL		                // auipc - upper immediate does not equal pc 
 	nop
 	nop
 	nop
-	nop                         // Branched to fail if x7 != (0xa5a5a000 + PC_LOC) - 0xa5a5a000 = PC_LOC
-    nop                        
+	nop                      // Branched to fail if x7 != (0xa5a5a000 + PC_LOC) - 0xa5a5a000 = PC_LOC 
+    nop                           // validated pc was added during auipc instruction
     nop
     nop
 	halt
