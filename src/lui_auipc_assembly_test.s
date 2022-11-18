@@ -36,8 +36,8 @@ _start:
 	nop                      // x12 = 0xa5a5a000
 	nop                      // x13 = 0xfffff000
 	nop                      // x5 = 0xffffffff
-	nop                      // not branch if x5 = x12 // validates upper 20-bit upper immediate loaded correctly and lower 12-bits set to 0
-	nop
+	nop                      // not branch if x5 = x12 // validates upper 20-bit upper immediate loaded correctly 
+	nop                                                // and lower 12-bits set to 0
 
 /***************************************************************
  * auipc instruction tests
